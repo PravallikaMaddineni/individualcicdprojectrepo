@@ -15,13 +15,19 @@ export default function SupervisorLogin() {
     setError("");
 
     try {
+      // Login API call
       const res = await axios.post(
         `http://localhost:2006/supervisors/login`,
         null,
         { params: { email, password } }
       );
 
-      localStorage.setItem("supervisor", JSON.stringify(res.data));
+      const supervisor = res.data;
+
+      // Save supervisor info and ID separately
+      localStorage.setItem("supervisor", JSON.stringify(supervisor));
+      localStorage.setItem("supervisorId", supervisor.id); // ✅ important for fetching approved expenses
+
       setIsSupervisorLoggedIn(true);
       navigate("/supervisor/dashboard");
     } catch (err) {

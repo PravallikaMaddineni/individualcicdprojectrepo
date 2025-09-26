@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import config from "../config"; // make sure this points to your backend URL
+import config from "../config"; // uses your config.js
 
 export default function ViewRequests() {
   const [requests, setRequests] = useState([]);
@@ -9,12 +9,23 @@ export default function ViewRequests() {
   // Fetch all supervisor requests
   const fetchRequests = async () => {
     try {
-      const response = await axios.get(`${config.backendUrl}/admin/requests`);
+      const response = await axios.get(`${config.url}/admin/requests`);
       setRequests(response.data);
-      setError(""); // clear previous errors
+      setError("");
     } catch (err) {
       console.error("Error fetching requests", err);
-      setError("Failed to fetch requests");
+      setError("Failed to fetch requests. Check backend URL or server.");
+    }
+  };
+
+  // Delete a request
+  const deleteRequest = async (id) => {
+    try {
+      await axios.delete(`${config.url}/admin/requests`, { params: { id } });
+      fetchRequests(); // refresh list
+    } catch (err) {
+      console.error("Failed to delete request", err);
+      setError("Failed to delete request");
     }
   };
 
@@ -22,43 +33,65 @@ export default function ViewRequests() {
     fetchRequests();
   }, []);
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>All Supervisor Requests</h2>
+  // Inline CSS with #FFB1AC
+  const styles = {
+    container: { padding: "20px", fontFamily: "Arial, sans-serif" },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      marginTop: "20px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+    },
+    th: {
+      backgroundColor: "#FFB1AC",
+      color: "white",
+      padding: "12px",
+      textAlign: "left"
+    },
+    td: { padding: "10px", borderBottom: "1px solid #ddd" },
+    button: {
+      padding: "6px 12px",
+      backgroundColor: "#FFB1AC",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "0.3s"
+    },
+    error: { color: "red", marginTop: "10px" },
+    heading: { fontSize: "24px", color: "#FFB1AC" }
+  };
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+  return (
+    <div style={styles.container}>
+      <h2 style={styles.heading}>All Supervisor Requests</h2>
+
+      {error && <p style={styles.error}>{error}</p>}
 
       {requests.length === 0 ? (
         <p>No requests found</p>
       ) : (
-        <table border="1" cellPadding="10" style={{ borderCollapse: "collapse" }}>
+        <table style={styles.table}>
           <thead>
             <tr>
-              <th>ID</th>
-              <th>User Name</th>
-              <th>Supervisor Name</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th style={styles.th}>ID</th>
+              <th style={styles.th}>Supervisor Name</th>
+              <th style={styles.th}>Status</th>
+              <th style={styles.th}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {requests.map((req) => (
               <tr key={req.id}>
-                <td>{req.id}</td>
-                <td>{req.user?.username || "N/A"}</td>
-                <td>{req.supervisor?.name || "N/A"}</td>
-                <td>{req.status}</td>
-                <td>
-                  {/* Example: Delete request button */}
+                <td style={styles.td}>{req.id}</td>
+                <td style={styles.td}>{req.supervisor?.name || "N/A"}</td>
+                <td style={styles.td}>{req.status}</td>
+                <td style={styles.td}>
                   <button
-                    onClick={async () => {
-                      try {
-                        await axios.delete(`${config.backendUrl}/admin/requests?id=${req.id}`);
-                        fetchRequests(); // refresh after delete
-                      } catch (err) {
-                        console.error("Failed to delete request", err);
-                      }
-                    }}
+                    style={styles.button}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = "#e89b9b")}
+                    onMouseOut={(e) => (e.target.style.backgroundColor = "#FFB1AC")}
+                    onClick={() => deleteRequest(req.id)}
                   >
                     Delete
                   </button>
