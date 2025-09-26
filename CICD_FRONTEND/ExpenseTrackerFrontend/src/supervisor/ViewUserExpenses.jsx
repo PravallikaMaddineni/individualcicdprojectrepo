@@ -6,19 +6,20 @@ export default function ViewUserExpenses() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const supervisor = JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const fetchUsers = async () => {
+    const supervisor = JSON.parse(localStorage.getItem("supervisor"));
     if (!supervisor?.id) {
       setError("Supervisor not logged in.");
       setLoading(false);
       return;
     }
+
     try {
-      const res = await axios.get(`${API_URL}/supervisorRequests/supervisor/${supervisor.id}`);
-      const approvedRequests = res.data.filter(r => r.status === "APPROVED");
-      setUsers(approvedRequests.map(r => r.user));
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/supervisorRequests/supervisor/${supervisor.id}`
+      );
+      const accepted = res.data.filter(r => r.status === "APPROVED"); // keep consistent
+      setUsers(accepted.map(r => r.user));
       setError("");
     } catch (err) {
       console.error(err);

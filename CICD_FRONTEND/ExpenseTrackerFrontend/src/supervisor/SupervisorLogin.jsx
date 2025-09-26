@@ -15,6 +15,7 @@ export default function SupervisorLogin() {
     setError("");
 
     try {
+      // Login API call using env variable
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/supervisors/login`,
         null,
@@ -23,11 +24,9 @@ export default function SupervisorLogin() {
 
       const supervisor = res.data;
 
-      // store in both sessionStorage and localStorage
+      // Save supervisor info and ID separately
       localStorage.setItem("supervisor", JSON.stringify(supervisor));
       localStorage.setItem("supervisorId", supervisor.id);
-      sessionStorage.setItem("supervisor", JSON.stringify(supervisor));
-      sessionStorage.setItem("supervisorId", supervisor.id);
 
       setIsSupervisorLoggedIn(true);
       navigate("/supervisor/dashboard");
@@ -81,7 +80,12 @@ export default function SupervisorLogin() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ padding: "10px", borderRadius: "8px", border: "none", outline: "none" }}
+            style={{
+              padding: "10px",
+              borderRadius: "8px",
+              border: "none",
+              outline: "none",
+            }}
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -91,7 +95,12 @@ export default function SupervisorLogin() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ padding: "10px", borderRadius: "8px", border: "none", outline: "none" }}
+            style={{
+              padding: "10px",
+              borderRadius: "8px",
+              border: "none",
+              outline: "none",
+            }}
           />
         </div>
         <button

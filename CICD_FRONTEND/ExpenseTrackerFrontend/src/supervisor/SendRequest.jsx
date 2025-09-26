@@ -6,15 +6,16 @@ export default function SendRequest() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState("");
 
-  // storage-safe supervisor
-  const supervisor =
-    JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
+  // Get supervisor from localStorage
+  const supervisor = JSON.parse(localStorage.getItem("supervisor"));
 
+  // Docker-friendly backend URL from .env
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Safety checks
     if (!supervisor) {
       alert("Supervisor info not found. Please log in again.");
       return;
@@ -39,7 +40,67 @@ export default function SendRequest() {
     }
   };
 
-  const styles = { /* keep your existing inline styles */ };
+  // Styles (unchanged)
+  const styles = {
+    container: {
+      padding: "25px",
+      maxWidth: "500px",
+      margin: "40px auto",
+      backgroundColor: "#f4f4f9",
+      borderRadius: "12px",
+      boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+      fontFamily: "Arial, sans-serif",
+    },
+    title: {
+      textAlign: "center",
+      marginBottom: "25px",
+      color: "#333",
+    },
+    formGroup: {
+      marginBottom: "20px",
+      display: "flex",
+      flexDirection: "column",
+    },
+    label: {
+      marginBottom: "8px",
+      fontWeight: "bold",
+      color: "#555",
+    },
+    input: {
+      padding: "10px",
+      borderRadius: "6px",
+      border: "1px solid #ccc",
+      fontSize: "14px",
+      outline: "none",
+    },
+    textarea: {
+      padding: "10px",
+      borderRadius: "6px",
+      border: "1px solid #ccc",
+      fontSize: "14px",
+      minHeight: "100px",
+      resize: "vertical",
+      outline: "none",
+    },
+    button: {
+      padding: "12px 15px",
+      borderRadius: "6px",
+      border: "none",
+      backgroundColor: "#4CAF50",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+      width: "100%",
+      fontSize: "16px",
+      transition: "background-color 0.3s",
+    },
+    success: {
+      color: "green",
+      textAlign: "center",
+      marginBottom: "20px",
+      fontWeight: "bold",
+    },
+  };
 
   return (
     <div style={styles.container}>

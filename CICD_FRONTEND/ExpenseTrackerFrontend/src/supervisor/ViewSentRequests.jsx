@@ -6,9 +6,7 @@ export default function ViewSentRequests() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const supervisor =
-    JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
-
+  const supervisor = JSON.parse(localStorage.getItem("supervisor"));
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -34,7 +32,47 @@ export default function ViewSentRequests() {
     }
   };
 
-  const styles = { /* keep your existing styles */ };
+  const styles = {
+    container: {
+      padding: "20px",
+      maxWidth: "800px",
+      margin: "40px auto",
+      backgroundColor: "#fff5f0",
+      borderRadius: "12px",
+      boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
+      fontFamily: "Arial, sans-serif",
+    },
+    title: {
+      textAlign: "center",
+      marginBottom: "20px",
+      color: "#ff6f61",
+      fontSize: "24px",
+      fontWeight: "bold",
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+    },
+    th: {
+      backgroundColor: "#ff7f50",
+      color: "#fff",
+      padding: "12px",
+      textAlign: "left",
+    },
+    td: {
+      padding: "10px",
+      borderBottom: "1px solid #ffd1c1",
+    },
+    tbodyRow: {
+      transition: "background 0.3s",
+    },
+    noRequests: {
+      textAlign: "center",
+      color: "#ff6f61",
+      fontWeight: "bold",
+      marginTop: "20px",
+    },
+  };
 
   if (loading) return <p style={{ textAlign: "center" }}>Loading sent requests...</p>;
   if (error) return <p style={styles.noRequests}>{error}</p>;
