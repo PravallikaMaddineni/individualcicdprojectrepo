@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function ViewUserExpenses() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const supervisor =
+    JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
 
   const fetchUsers = async () => {
-    const supervisor = JSON.parse(localStorage.getItem("supervisor"));
     if (!supervisor?.id) {
       setError("Supervisor not logged in.");
       setLoading(false);
+      navigate("/supervisorlogin");
       return;
     }
 
@@ -18,7 +23,7 @@ export default function ViewUserExpenses() {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/supervisorRequests/supervisor/${supervisor.id}`
       );
-      const accepted = res.data.filter(r => r.status === "APPROVED"); // keep consistent
+      const accepted = res.data.filter(r => r.status === "APPROVED");
       setUsers(accepted.map(r => r.user));
       setError("");
     } catch (err) {

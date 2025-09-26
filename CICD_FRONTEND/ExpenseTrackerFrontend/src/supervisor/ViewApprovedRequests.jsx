@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function ViewApprovedRequests() {
   const [expenses, setExpenses] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const supervisor = JSON.parse(localStorage.getItem("supervisor"));
-  const API_URL = import.meta.env.VITE_API_URL; // ✅ .env URL
+  const supervisor =
+    JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const fetchApprovedExpenses = async () => {
     if (!supervisor?.id) {
       setError("Supervisor not logged in. Please login again.");
+      navigate("/supervisorlogin");
       return;
     }
 

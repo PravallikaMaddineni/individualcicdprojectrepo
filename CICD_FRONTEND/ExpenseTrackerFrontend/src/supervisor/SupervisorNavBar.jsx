@@ -14,7 +14,11 @@ export default function SupervisorNavBar() {
 
   const handleLogout = () => {
     setIsSupervisorLoggedIn(false);
+    // clear both storages so nothing lingers
     localStorage.removeItem("supervisor");
+    localStorage.removeItem("supervisorId");
+    sessionStorage.removeItem("supervisor");
+    sessionStorage.removeItem("supervisorId");
     navigate("/supervisorlogin");
   };
 

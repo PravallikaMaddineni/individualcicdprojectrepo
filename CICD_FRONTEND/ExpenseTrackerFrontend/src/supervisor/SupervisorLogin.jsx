@@ -24,11 +24,15 @@ export default function SupervisorLogin() {
 
       const supervisor = res.data;
 
-      // Save supervisor info and ID separately
+      // Save supervisor info and ID in both storages (so rebuilds/reloads won't break)
       localStorage.setItem("supervisor", JSON.stringify(supervisor));
       localStorage.setItem("supervisorId", supervisor.id);
+      sessionStorage.setItem("supervisor", JSON.stringify(supervisor));
+      sessionStorage.setItem("supervisorId", supervisor.id);
 
+      // update auth state
       setIsSupervisorLoggedIn(true);
+
       navigate("/supervisor/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password");

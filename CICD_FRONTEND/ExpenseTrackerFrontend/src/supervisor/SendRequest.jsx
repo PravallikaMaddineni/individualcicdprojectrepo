@@ -1,16 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../contextapi/AuthContext";
 
 export default function SendRequest() {
   const [userId, setUserId] = useState("");
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+  const { isSupervisorLoggedIn } = useAuth();
 
-  // Get supervisor from localStorage
-  const supervisor = JSON.parse(localStorage.getItem("supervisor"));
+  // safe supervisor read: sessionStorage fallback to localStorage
+  const supervisor =
+    JSON.parse(sessionStorage.getItem("supervisor") || localStorage.getItem("supervisor") || "null");
 
   // Docker-friendly backend URL from .env
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Redirect if supervisor is not logged in or supervisor data missing
+  useEffect(() => {
+    if (!isSupervisorLoggedIn || !supervisor) {
+      navigate("/supervisorlogin");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSupervisorLoggedIn, supervisor]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
