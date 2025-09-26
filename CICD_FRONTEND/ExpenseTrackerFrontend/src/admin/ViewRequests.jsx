@@ -35,7 +35,7 @@ export default function ViewRequests() {
     fetchRequests();
   }, []);
 
-  // Inline CSS with red Delete button
+  // Inline CSS (unchanged)
   const styles = {
     container: { padding: "20px", fontFamily: "Arial, sans-serif" },
     table: {
@@ -78,6 +78,7 @@ export default function ViewRequests() {
             <tr>
               <th style={styles.th}>ID</th>
               <th style={styles.th}>Supervisor Name</th>
+              <th style={styles.th}>User Name</th>
               <th style={styles.th}>Status</th>
               <th style={styles.th}>Actions</th>
             </tr>
@@ -87,6 +88,7 @@ export default function ViewRequests() {
               <tr key={req.id}>
                 <td style={styles.td}>{req.id}</td>
                 <td style={styles.td}>{req.supervisor?.name || "N/A"}</td>
+                <td style={styles.td}>{req.user?.name || "N/A"}</td>
                 <td style={styles.td}>{req.status}</td>
                 <td style={styles.td}>
                   <button
