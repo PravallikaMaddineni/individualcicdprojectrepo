@@ -7,13 +7,17 @@ export default function AdminDashboard() {
   const [supervisorCount, setSupervisorCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Use backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const u = await axios.get("/admin/users/count");      // proxied
+        // ✅ Updated URLs to use API_URL
+        const u = await axios.get(`${API_URL}/admin/users/count`);
         setUserCount(u.data ?? 0);
 
-        const s = await axios.get("/admin/supervisors/count"); // proxied
+        const s = await axios.get(`${API_URL}/admin/supervisors/count`);
         setSupervisorCount(s.data ?? 0);
       } catch (err) {
         console.error("Error fetching counts", err);
@@ -25,7 +29,7 @@ export default function AdminDashboard() {
     };
 
     fetchCounts();
-  }, []);
+  }, [API_URL]);
 
   return (
     <div className="admin-dashboard">
