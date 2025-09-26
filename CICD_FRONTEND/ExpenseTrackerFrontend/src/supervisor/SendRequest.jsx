@@ -6,12 +6,24 @@ export default function SendRequest() {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Get supervisor from localStorage
   const supervisor = JSON.parse(localStorage.getItem("supervisor"));
-  const API_URL = import.meta.env.VITE_API_URL; // ✅ Using .env
+
+  // Docker-friendly backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
+
+    // Safety checks
+    if (!supervisor) {
+      alert("Supervisor info not found. Please log in again.");
+      return;
+    }
+    if (!userId) {
+      alert("User ID is required.");
+      return;
+    }
 
     try {
       await axios.post(`${API_URL}/supervisorRequests/send`, {
@@ -24,9 +36,11 @@ export default function SendRequest() {
       setMessage("");
     } catch (err) {
       console.error("Failed to send request", err);
+      alert("Failed to send request. Check your backend or network.");
     }
   };
 
+  // Styles (unchanged)
   const styles = {
     container: {
       padding: "25px",
