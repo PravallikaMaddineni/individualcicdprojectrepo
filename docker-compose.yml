@@ -18,7 +18,7 @@ services:
       retries: 10
 
   backend:
-    image: perkypuri/docker-backend:v2
+    image: pravallikamaddineni/docker-backend:v2
     container_name: springboot
     ports:
       - "2025:2006"
@@ -34,7 +34,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
 
   frontend:
-    image: perkypuri/docker-frontend:v2
+    image: pravallikamaddineni/docker-frontend:v2
     container_name: react
     ports:
       - "2020:80"
