@@ -35,33 +35,33 @@ export default function ViewRequests() {
     fetchRequests();
   }, []);
 
-  // Inline CSS with #FFB1AC
+  // Inline CSS with red Delete button
   const styles = {
     container: { padding: "20px", fontFamily: "Arial, sans-serif" },
     table: {
       width: "100%",
       borderCollapse: "collapse",
       marginTop: "20px",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
     },
     th: {
       backgroundColor: "#FFB1AC",
       color: "white",
       padding: "12px",
-      textAlign: "left"
+      textAlign: "left",
     },
     td: { padding: "10px", borderBottom: "1px solid #ddd" },
     button: {
       padding: "6px 12px",
-      backgroundColor: "#FFB1AC",
+      backgroundColor: "#e53935", // red
       color: "white",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
-      transition: "0.3s"
+      transition: "0.3s",
     },
     error: { color: "red", marginTop: "10px" },
-    heading: { fontSize: "24px", color: "#FFB1AC" }
+    heading: { fontSize: "24px", color: "#FFB1AC" },
   };
 
   return (
@@ -91,8 +91,8 @@ export default function ViewRequests() {
                 <td style={styles.td}>
                   <button
                     style={styles.button}
-                    onMouseOver={(e) => (e.target.style.backgroundColor = "#e89b9b")}
-                    onMouseOut={(e) => (e.target.style.backgroundColor = "#FFB1AC")}
+                    onMouseOver={(e) => (e.target.style.backgroundColor = "#d32f2f")}
+                    onMouseOut={(e) => (e.target.style.backgroundColor = "#e53935")}
                     onClick={() => deleteRequest(req.id)}
                   >
                     Delete

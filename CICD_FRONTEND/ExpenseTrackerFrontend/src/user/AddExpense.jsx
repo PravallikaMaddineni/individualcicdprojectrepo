@@ -4,52 +4,44 @@ import axios from "axios";
 
 export default function AddExpense() {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     category: "",
     amount: "",
     date: "",
     description: "",
   });
-
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ Read backend URL from .env
   const API_URL = import.meta.env.VITE_API_URL;
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.id]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
     setError("");
+    setMessage("");
 
-    const payload = {
-      ...formData,
-      user: { id: JSON.parse(localStorage.getItem("user")).id },
-    };
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      setError("User not logged in.");
+      setLoading(false);
+      return;
+    }
 
     try {
-      const response = await axios.post(`${API_URL}/expenses/add`, payload);
-
+      const response = await axios.post(`${API_URL}/expenses/add`, {
+        ...formData,
+        user: { id: user.id },
+      });
       if (response.status === 200) {
-        setMessage(response.data);
-        setError("");
-        setTimeout(() => {
-          navigate("/user/dashboard");
-        }, 1000);
+        setMessage("Expense added successfully!");
+        setTimeout(() => navigate("/user/viewexpenses"), 1000);
       }
     } catch (err) {
-      if (err.response) {
-        setError(err.response.data);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      setError(err.response?.data || "Failed to add expense");
     } finally {
       setLoading(false);
     }
@@ -92,23 +84,12 @@ export default function AddExpense() {
           Add Expense
         </h3>
 
-        {message && (
-          <p style={{ color: "green", textAlign: "center", marginBottom: "15px" }}>{message}</p>
-        )}
-        {error && (
-          <p style={{ color: "red", textAlign: "center", marginBottom: "15px" }}>{error}</p>
-        )}
+        {message && <p style={{ color: "green", textAlign: "center", marginBottom: "15px" }}>{message}</p>}
+        {error && <p style={{ color: "red", textAlign: "center", marginBottom: "15px" }}>{error}</p>}
 
-        {/* Form Fields */}
         {["category", "amount", "date"].map((field) => (
-          <div
-            key={field}
-            style={{ marginBottom: "18px", display: "flex", flexDirection: "column" }}
-          >
-            <label
-              htmlFor={field}
-              style={{ marginBottom: "5px", fontWeight: "600", color: "#333", fontSize: "14px" }}
-            >
+          <div key={field} style={{ marginBottom: "18px", display: "flex", flexDirection: "column" }}>
+            <label htmlFor={field} style={{ marginBottom: "5px", fontWeight: "600", color: "#333", fontSize: "14px" }}>
               {field.charAt(0).toUpperCase() + field.slice(1)}
             </label>
             <input
@@ -132,12 +113,8 @@ export default function AddExpense() {
           </div>
         ))}
 
-        {/* Description */}
         <div style={{ marginBottom: "20px", display: "flex", flexDirection: "column" }}>
-          <label
-            htmlFor="description"
-            style={{ marginBottom: "5px", fontWeight: "600", color: "#333", fontSize: "14px" }}
-          >
+          <label htmlFor="description" style={{ marginBottom: "5px", fontWeight: "600", color: "#333", fontSize: "14px" }}>
             Description
           </label>
           <textarea
@@ -158,7 +135,6 @@ export default function AddExpense() {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}

@@ -5,18 +5,24 @@ import axios from "axios";
 export default function ViewExpenses() {
   const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
-  const API_URL = import.meta.env.VITE_API_URL; // ✅ Using .env URL
+  const API_URL = import.meta.env.VITE_API_URL;
 
+  // Fetch expenses for logged-in user
   const fetchExpenses = async () => {
+    if (!user || !user.id) {
+      navigate("/userlogin");
+      return;
+    }
+
     try {
       const response = await axios.get(`${API_URL}/expenses/user/${user.id}`);
       setExpenses(response.data || []);
-    } catch (err) {
+    } catch {
       setError("Failed to fetch expenses");
     } finally {
       setLoading(false);
@@ -24,16 +30,18 @@ export default function ViewExpenses() {
   };
 
   useEffect(() => {
-    if (!user || !user.id) navigate("/userlogin");
-    else fetchExpenses();
+    fetchExpenses();
   }, []);
 
+  // Edit expense
   const handleEdit = (expense) => {
     navigate(`/editexpense/${expense.id}`, { state: { expense } });
   };
 
+  // Delete expense
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
+
     try {
       setDeletingId(id);
       await axios.delete(`${API_URL}/expenses/delete/${id}`);
@@ -150,7 +158,7 @@ export default function ViewExpenses() {
                 <tr key={expense.id}>
                   <td style={styles.td}>{expense.category}</td>
                   <td style={styles.td}>${expense.amount}</td>
-                  <td style={styles.td}>{expense.date}</td>
+                  <td style={styles.td}>{new Date(expense.date).toLocaleDateString()}</td>
                   <td style={styles.td}>{expense.description}</td>
                   <td style={styles.td}>
                     <button

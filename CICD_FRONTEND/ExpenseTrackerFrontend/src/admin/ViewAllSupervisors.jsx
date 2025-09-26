@@ -22,6 +22,16 @@ export default function ViewAllSupervisors() {
     }
   };
 
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this supervisor?")) return;
+    try {
+      await axios.delete(`${API_URL}/admin/supervisors/${id}`);
+      setSupervisors(supervisors.filter((sup) => sup.id !== id));
+    } catch (err) {
+      alert("Failed to delete supervisor");
+    }
+  };
+
   return (
     <div
       style={{
@@ -68,6 +78,7 @@ export default function ViewAllSupervisors() {
                 <th style={{ padding: "12px", textAlign: "left" }}>Email</th>
                 <th style={{ padding: "12px", textAlign: "left" }}>Mobile</th>
                 <th style={{ padding: "12px", textAlign: "left" }}>Status</th>
+                <th style={{ padding: "12px", textAlign: "left" }}>Action</th> {/* new column */}
               </tr>
             </thead>
             <tbody>
@@ -90,6 +101,22 @@ export default function ViewAllSupervisors() {
                   <td style={{ padding: "12px" }}>{sup.email}</td>
                   <td style={{ padding: "12px" }}>{sup.mobile}</td>
                   <td style={{ padding: "12px" }}>{sup.status}</td>
+                  <td style={{ padding: "12px" }}>
+                    <button
+                      style={{
+                        backgroundColor: "#e53935", // red
+                        color: "white",
+                        border: "none",
+                        padding: "6px 12px",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                        fontWeight: "bold",
+                      }}
+                      onClick={() => handleDelete(sup.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -3,7 +3,7 @@ import { useAuth } from "../contextapi/AuthContext";
 import SupervisorDashboard from "./SupervisorDashboard";
 import SendRequest from "./SendRequest";
 import ViewSentRequests from "./ViewSentRequests";
-import ViewApprovedRequests from "./ViewApprovedRequests"; // 👈 new import
+import ViewApprovedRequests from "./ViewApprovedRequests";
 import SupervisorLogin from "./SupervisorLogin";
 import SupervisorRegistration from "./SupervisorRegistration";
 import "./SupervisorDashBoard.css";
@@ -29,11 +29,13 @@ export default function SupervisorNavBar() {
             <ul className="dropdown-menu">
               <li><Link to="/supervisor/sendrequest">Send Request</Link></li>
               <li><Link to="/supervisor/viewsentrequests">View Sent Requests</Link></li>
-              <li><Link to="/supervisor/viewapprovedrequests">View Approved Requests</Link></li> {/* 👈 new */}
+              <li><Link to="/supervisor/viewapprovedrequests">View Approved Requests</Link></li>
             </ul>
           </li>
           <li>
-            <Link to="/supervisorlogin" onClick={handleLogout}>Logout</Link>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </li>
         </ul>
       </nav>
@@ -42,7 +44,7 @@ export default function SupervisorNavBar() {
         <Route path="/supervisor/dashboard" element={<SupervisorDashboard />} />
         <Route path="/supervisor/sendrequest" element={<SendRequest />} />
         <Route path="/supervisor/viewsentrequests" element={<ViewSentRequests />} />
-        <Route path="/supervisor/viewapprovedrequests" element={<ViewApprovedRequests />} /> {/* 👈 new */}
+        <Route path="/supervisor/viewapprovedrequests" element={<ViewApprovedRequests />} />
         <Route path="/supervisorlogin" element={<SupervisorLogin />} />
         <Route path="/supervisorregister" element={<SupervisorRegistration />} />
       </Routes>

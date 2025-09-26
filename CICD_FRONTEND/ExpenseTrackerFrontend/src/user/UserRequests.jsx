@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function UserRequests() {
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState("");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
 
-  // ✅ Backend URL from .env
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    if (user) fetchRequests();
-    else setError("User not logged in.");
-  }, []);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      fetchRequests(user.id);
+    } else {
+      setError("User not logged in.");
+      navigate("/userlogin"); // redirect if not logged in
+    }
+  }, [navigate]);
 
-  const fetchRequests = async () => {
+  const fetchRequests = async (userId) => {
     try {
       const response = await axios.get(
-        `${API_URL}/supervisorRequests/user/${user.id}`
+        `${API_URL}/supervisorRequests/user/${userId}`
       );
       setRequests(response.data || []);
       setError("");
@@ -34,7 +40,8 @@ export default function UserRequests() {
         { params: { status } }
       );
       alert(`Request ${status.toLowerCase()}!`);
-      fetchRequests(); // refresh list
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      fetchRequests(storedUser.id); // refresh list
     } catch {
       alert("Failed to update request");
     }

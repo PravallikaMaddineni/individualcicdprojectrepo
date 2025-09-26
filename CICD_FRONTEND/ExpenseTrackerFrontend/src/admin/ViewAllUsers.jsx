@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function ViewAllUsers() {
   const [users, setUsers] = useState([]);
-  
+
   // ✅ Read backend URL from .env
   const backendUrl = import.meta.env.VITE_API_URL;
 
@@ -82,14 +82,14 @@ export default function ViewAllUsers() {
                       padding: "8px 16px",
                       borderRadius: "8px",
                       border: "none",
-                      backgroundColor: "#FFB1AC",
+                      backgroundColor: "#e53935", // red
                       color: "#fff",
                       cursor: "pointer",
                       fontWeight: "bold",
                       transition: "0.3s",
                     }}
-                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#ff8f85")}
-                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#FFB1AC")}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#d32f2f")}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#e53935")}
                   >
                     Delete
                   </button>
