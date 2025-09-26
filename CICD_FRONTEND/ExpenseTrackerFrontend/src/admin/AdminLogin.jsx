@@ -8,11 +8,14 @@ export default function AdminLogin() {
   const { setIsAdminLoggedIn } = useAuth();
   const navigate = useNavigate();
 
+  // ✅ Read backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:2006/admin/login", {
+      const res = await fetch(`${API_URL}/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

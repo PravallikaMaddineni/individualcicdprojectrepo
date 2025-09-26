@@ -5,13 +5,16 @@ export default function ViewAllSupervisors() {
   const [supervisors, setSupervisors] = useState([]);
   const [error, setError] = useState("");
 
+  // ✅ Read backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     fetchSupervisors();
   }, []);
 
   const fetchSupervisors = async () => {
     try {
-      const res = await axios.get("http://localhost:2006/admin/supervisors");
+      const res = await axios.get(`${API_URL}/admin/supervisors`);
       setSupervisors(res.data);
     } catch (err) {
       console.error("Error fetching supervisors", err);

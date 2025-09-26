@@ -15,9 +15,9 @@ export default function SupervisorLogin() {
     setError("");
 
     try {
-      // Login API call
+      // Login API call using env variable
       const res = await axios.post(
-        `http://localhost:2006/supervisors/login`,
+        `${import.meta.env.VITE_API_URL}/supervisors/login`,
         null,
         { params: { email, password } }
       );
@@ -26,7 +26,7 @@ export default function SupervisorLogin() {
 
       // Save supervisor info and ID separately
       localStorage.setItem("supervisor", JSON.stringify(supervisor));
-      localStorage.setItem("supervisorId", supervisor.id); // ✅ important for fetching approved expenses
+      localStorage.setItem("supervisorId", supervisor.id);
 
       setIsSupervisorLoggedIn(true);
       navigate("/supervisor/dashboard");

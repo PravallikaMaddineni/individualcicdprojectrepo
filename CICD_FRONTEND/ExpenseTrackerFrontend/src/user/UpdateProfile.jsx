@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import config from '../config';
 
 export default function UpdateProfile() {
   const navigate = useNavigate();
@@ -18,6 +17,9 @@ export default function UpdateProfile() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  // ✅ Backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -32,7 +34,7 @@ export default function UpdateProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`${config.url}/users/update`, formData);
+      const response = await axios.put(`${API_URL}/users/update`, formData);
       if (response.status === 200) {
         setMessage(response.data);
         setError('');
@@ -46,7 +48,7 @@ export default function UpdateProfile() {
     }
   };
 
-  // Inline styles
+  // Inline styles (unchanged)
   const styles = {
     container: {
       maxWidth: "500px",

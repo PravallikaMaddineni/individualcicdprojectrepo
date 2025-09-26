@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import config from "../config";
 
 export default function UserRegistration() {
   const [formData, setFormData] = useState({
@@ -13,6 +12,9 @@ export default function UserRegistration() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // ✅ Backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -20,7 +22,7 @@ export default function UserRegistration() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${config.url}/users/register`, formData);
+      const response = await axios.post(`${API_URL}/users/register`, formData);
       if (response.status === 200) {
         setMessage(response.data.message || "Registration successful!");
         setError("");

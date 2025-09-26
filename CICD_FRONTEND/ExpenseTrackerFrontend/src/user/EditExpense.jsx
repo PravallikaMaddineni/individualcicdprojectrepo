@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
-import config from "../config";
 
 export default function EditExpense() {
   const { id } = useParams();
@@ -22,6 +21,9 @@ export default function EditExpense() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // ✅ Read backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     if (!user) {
       navigate("/userlogin");
@@ -38,7 +40,7 @@ export default function EditExpense() {
       setLoading(false);
     } else {
       axios
-        .get(`${config.url}/expenses/${id}`)
+        .get(`${API_URL}/expenses/${id}`)
         .then((res) =>
           setFormData({
             category: String(res.data.category || ""),
@@ -50,7 +52,7 @@ export default function EditExpense() {
         .catch(() => setError("Failed to load expense"))
         .finally(() => setLoading(false));
     }
-    // Only run on mount or id change to avoid infinite loop
+    // Only run on mount or id change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
@@ -66,8 +68,7 @@ export default function EditExpense() {
     setMessage("");
 
     try {
-      // ✅ Match backend expectation: ID in body, no ID in URL
-      await axios.put(`${config.url}/expenses/update`, { 
+      await axios.put(`${API_URL}/expenses/update`, { 
         id: id,
         ...formData, 
         user: { id: user.id } 

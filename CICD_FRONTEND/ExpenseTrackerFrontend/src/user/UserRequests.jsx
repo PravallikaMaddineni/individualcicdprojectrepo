@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import config from "../config";
 
 export default function UserRequests() {
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
+
+  // ✅ Backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (user) fetchRequests();
@@ -15,7 +17,7 @@ export default function UserRequests() {
   const fetchRequests = async () => {
     try {
       const response = await axios.get(
-        `${config.url}/supervisorRequests/user/${user.id}`
+        `${API_URL}/supervisorRequests/user/${user.id}`
       );
       setRequests(response.data || []);
       setError("");
@@ -27,7 +29,7 @@ export default function UserRequests() {
   const updateStatus = async (requestId, status) => {
     try {
       await axios.put(
-        `${config.url}/supervisorRequests/updateStatus/${requestId}`,
+        `${API_URL}/supervisorRequests/updateStatus/${requestId}`,
         null,
         { params: { status } }
       );

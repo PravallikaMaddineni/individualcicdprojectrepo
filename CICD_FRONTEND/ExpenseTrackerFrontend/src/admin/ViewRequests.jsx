@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import config from "../config"; // uses your config.js
 
 export default function ViewRequests() {
   const [requests, setRequests] = useState([]);
   const [error, setError] = useState("");
 
+  // ✅ Read backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Fetch all supervisor requests
   const fetchRequests = async () => {
     try {
-      const response = await axios.get(`${config.url}/admin/requests`);
+      const response = await axios.get(`${API_URL}/admin/requests`);
       setRequests(response.data);
       setError("");
     } catch (err) {
@@ -21,7 +23,7 @@ export default function ViewRequests() {
   // Delete a request
   const deleteRequest = async (id) => {
     try {
-      await axios.delete(`${config.url}/admin/requests`, { params: { id } });
+      await axios.delete(`${API_URL}/admin/requests`, { params: { id } });
       fetchRequests(); // refresh list
     } catch (err) {
       console.error("Failed to delete request", err);

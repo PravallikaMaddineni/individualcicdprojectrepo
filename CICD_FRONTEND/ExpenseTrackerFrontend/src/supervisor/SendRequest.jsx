@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import config from "../config"; // Make sure config has your backend URL
 
 export default function SendRequest() {
   const [userId, setUserId] = useState("");
@@ -8,13 +7,14 @@ export default function SendRequest() {
   const [success, setSuccess] = useState("");
 
   const supervisor = JSON.parse(localStorage.getItem("supervisor"));
+  const API_URL = import.meta.env.VITE_API_URL; // ✅ Using .env
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess("");
 
     try {
-      await axios.post(`${config.url}/supervisorRequests/send`, {
+      await axios.post(`${API_URL}/supervisorRequests/send`, {
         user: { id: parseInt(userId) },
         supervisor: { id: supervisor.id },
         status: "PENDING",
@@ -79,9 +79,6 @@ export default function SendRequest() {
       width: "100%",
       fontSize: "16px",
       transition: "background-color 0.3s",
-    },
-    buttonHover: {
-      backgroundColor: "#45a049",
     },
     success: {
       color: "green",

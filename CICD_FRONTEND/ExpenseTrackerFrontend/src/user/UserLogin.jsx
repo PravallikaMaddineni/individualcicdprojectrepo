@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import config from "../config";
 import { useAuth } from "../contextapi/AuthContext";
 
 export default function UserLogin() {
@@ -9,6 +8,9 @@ export default function UserLogin() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { setIsUserLoggedIn } = useAuth();
+
+  // ✅ Backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.id]: e.target.value });
 
@@ -18,7 +20,7 @@ export default function UserLogin() {
 
     try {
       const response = await axios.post(
-        `${config.url}/users/login`,
+        `${API_URL}/users/login`,
         null,
         { params: { email: formData.email, password: formData.password } }
       );

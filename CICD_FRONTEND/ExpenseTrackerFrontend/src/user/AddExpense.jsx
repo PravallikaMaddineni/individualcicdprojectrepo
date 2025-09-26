@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import config from "../config";
 
 export default function AddExpense() {
   const navigate = useNavigate();
@@ -16,6 +15,9 @@ export default function AddExpense() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // ✅ Read backend URL from .env
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -33,7 +35,7 @@ export default function AddExpense() {
     };
 
     try {
-      const response = await axios.post(`${config.url}/expenses/add`, payload);
+      const response = await axios.post(`${API_URL}/expenses/add`, payload);
 
       if (response.status === 200) {
         setMessage(response.data);
@@ -123,7 +125,7 @@ export default function AddExpense() {
                 border: "1px solid #FFB1AC",
                 outline: "none",
                 fontSize: "14px",
-                textAlign: "center", // <-- center text here
+                textAlign: "center",
                 transition: "all 0.3s ease",
               }}
             />
@@ -150,7 +152,7 @@ export default function AddExpense() {
               outline: "none",
               fontSize: "14px",
               minHeight: "70px",
-              textAlign: "center", // <-- center text here
+              textAlign: "center",
               transition: "all 0.3s ease",
             }}
           />

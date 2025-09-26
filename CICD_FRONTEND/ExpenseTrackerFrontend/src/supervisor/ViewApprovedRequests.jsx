@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import config from "../config"; // backend URL
 
 export default function ViewApprovedRequests() {
   const [expenses, setExpenses] = useState([]);
   const [error, setError] = useState("");
 
-  // Fetch approved expenses for the logged-in supervisor
+  const supervisor = JSON.parse(localStorage.getItem("supervisor"));
+  const API_URL = import.meta.env.VITE_API_URL; // ✅ .env URL
+
   const fetchApprovedExpenses = async () => {
-    const supervisorId = localStorage.getItem("supervisorId"); // ✅ read from localStorage
-    if (!supervisorId) {
-      setError("Supervisor ID is missing. Please login again.");
+    if (!supervisor?.id) {
+      setError("Supervisor not logged in. Please login again.");
       return;
     }
 
     try {
       const response = await axios.get(
-        `${config.url}/expenses/approved/supervisor/${supervisorId}`
+        `${API_URL}/expenses/approved/supervisor/${supervisor.id}`
       );
-      setExpenses(response.data);
+      setExpenses(response.data || []);
       setError("");
     } catch (err) {
       console.error("Error fetching approved expenses", err);
@@ -56,19 +56,18 @@ export default function ViewApprovedRequests() {
                 key={exp.id}
                 style={{
                   ...styles.tbodyRow,
-                  backgroundColor: index % 2 === 0 ? "#fff" : "#ffe9e4", // alternating row colors
+                  backgroundColor: index % 2 === 0 ? "#fff" : "#ffe9e4",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#ffe3df")}
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.backgroundColor =
-                    index % 2 === 0 ? "#fff" : "#ffe9e4")
+                  (e.currentTarget.style.backgroundColor = index % 2 === 0 ? "#fff" : "#ffe9e4")
                 }
               >
                 <td style={styles.td}>{exp.id}</td>
                 <td style={styles.td}>{exp.user?.name || "N/A"}</td>
                 <td style={styles.td}>{exp.category}</td>
-                <td style={styles.td}>{exp.amount}</td>
-                <td style={styles.td}>{exp.date}</td>
+                <td style={styles.td}>${exp.amount}</td>
+                <td style={styles.td}>{new Date(exp.date).toLocaleDateString()}</td>
                 <td style={styles.td}>{exp.description}</td>
               </tr>
             ))}
@@ -79,7 +78,6 @@ export default function ViewApprovedRequests() {
   );
 }
 
-// ==================== CSS in JS ====================
 const styles = {
   container: {
     padding: "30px",

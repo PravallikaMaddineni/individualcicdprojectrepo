@@ -3,7 +3,9 @@ import axios from "axios";
 
 export default function ViewAllUsers() {
   const [users, setUsers] = useState([]);
-  const backendUrl = "http://localhost:2006"; // your Spring Boot backend URL
+  
+  // ✅ Read backend URL from .env
+  const backendUrl = import.meta.env.VITE_API_URL;
 
   const fetchUsers = async () => {
     try {

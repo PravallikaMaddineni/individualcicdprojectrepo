@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import config from "../config";
 
 export default function ViewExpenses() {
   const navigate = useNavigate();
@@ -11,10 +10,11 @@ export default function ViewExpenses() {
   const [deletingId, setDeletingId] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
+  const API_URL = import.meta.env.VITE_API_URL; // ✅ Using .env URL
 
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get(`${config.url}/expenses/user/${user.id}`);
+      const response = await axios.get(`${API_URL}/expenses/user/${user.id}`);
       setExpenses(response.data || []);
     } catch (err) {
       setError("Failed to fetch expenses");
@@ -36,7 +36,7 @@ export default function ViewExpenses() {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
     try {
       setDeletingId(id);
-      await axios.delete(`${config.url}/expenses/delete/${id}`);
+      await axios.delete(`${API_URL}/expenses/delete/${id}`);
       setExpenses(expenses.filter((exp) => exp.id !== id));
     } catch {
       setError("Failed to delete expense");
@@ -50,7 +50,7 @@ export default function ViewExpenses() {
       maxWidth: "1000px",
       margin: "40px auto",
       padding: "30px",
-      backgroundColor: "#FFB1AC", // your preferred coral
+      backgroundColor: "#FFB1AC",
       borderRadius: "15px",
       boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
       fontFamily: "Arial, sans-serif",
@@ -76,12 +76,12 @@ export default function ViewExpenses() {
     table: {
       width: "100%",
       borderCollapse: "separate",
-      borderSpacing: "0 12px", // spacing between rows
+      borderSpacing: "0 12px",
       textAlign: "center",
     },
     th: {
       backgroundColor: "#fff",
-      color: "#FF6F61", // a darker coral shade for contrast
+      color: "#FF6F61",
       padding: "15px",
       fontSize: "16px",
       borderRadius: "12px 12px 0 0",
@@ -89,7 +89,7 @@ export default function ViewExpenses() {
     },
     td: {
       padding: "15px",
-      backgroundColor: "rgba(255, 255, 255, 0.9)", // white with slight transparency
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
       borderRadius: "12px",
       boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
     },
