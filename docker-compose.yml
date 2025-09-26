@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   mysqldb:
     image: mysql:8
@@ -6,16 +8,16 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: expensedb
     ports:
-      - "3307:3306"
+      - "3307:3306"   # host:container, for accessing from your machine
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - springboot-mysql-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   backend:
     image: perkypuri/docker-backend:v2
@@ -28,6 +30,10 @@ services:
     restart: on-failure
     networks:
       - springboot-mysql-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/expensedb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
 
   frontend:
     image: perkypuri/docker-frontend:v2
